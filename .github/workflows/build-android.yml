@@ -124,17 +124,17 @@ jobs:
           mkdir out
           ls -R build/app/outputs
           apk=build/app/outputs/flutter-apk
-          cp $apk/*arm64-v8a*.apk out/Hiddify-Android-arm64.apk || echo "no arm64 apk"
-          cp $apk/*armeabi-v7a*.apk out/Hiddify-Android-arm7.apk || echo "no arm7 apk"
-          cp $apk/*x86_64*.apk out/Hiddify-Android-x86_64.apk || echo "no x64 apk"
-          cp $apk/app-release.apk out/Hiddify-Android-universal.apk || echo "no universal apk"
+          cp $apk/*arm64-v8a*.apk out/Nordix-Android-arm64.apk || echo "no arm64 apk"
+          cp $apk/*armeabi-v7a*.apk out/Nordix-Android-arm7.apk || echo "no arm7 apk"
+          cp $apk/*x86_64*.apk out/Nordix-Android-x86_64.apk || echo "no x64 apk"
+          cp $apk/app-release.apk out/Nordix-Android-universal.apk || echo "no universal apk"
 
       - name: Collect the Google Play bundle
         if: matrix.target == 'aab'
         run: |
           mkdir out
           ls -R build/app/outputs
-          cp build/app/outputs/bundle/release/app-release.aab out/hiddify-android-market.aab
+          cp build/app/outputs/bundle/release/app-release.aab out/nordix-android-market.aab
 
       - name: Upload the artifact
         if: inputs.release

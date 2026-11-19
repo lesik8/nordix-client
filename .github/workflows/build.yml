@@ -210,9 +210,8 @@ jobs:
   # The Play bundle (google-play.yml). A failed GitHub release stops it: a version reaches Play only
   # when it was published here.
   google-play:
-    if: >-
-      !cancelled() && inputs.upload-artifact && needs.test.result == 'success' &&
-      (needs.release.result == 'success' || needs.release.result == 'skipped')
+    # Nordix: no Play Console account - the upload is disabled.
+    if: false
     needs: [test, android, release]
     uses: ./.github/workflows/google-play.yml
     secrets: inherit

@@ -114,13 +114,14 @@ elseif ($env:WINDOWS_SIGNING_KEY) {
     Set-CiEnv 'WINDOWS_SIGN_PFX' $pfx
 }
 else {
-    throw 'No Windows signing material: configure Azure Artifact Signing (AZURE_SIGNING_ENDPOINT, AZURE_SIGNING_ACCOUNT, AZURE_SIGNING_CERT_PROFILE, WINDOWS_SIGNING_PUBLISHER + credentials) or a CA-issued PFX (WINDOWS_SIGNING_KEY, WINDOWS_SIGNING_PASSWORD). See docs/windows-code-signing.md.'
+    # Nordix: personal builds ship unsigned - warn and continue with backend 'None'.
+    Write-CiWarning 'No Windows signing material: building UNSIGNED (backend None). See docs/windows-code-signing.md to configure signing.'
 }
 
 Set-CiEnv 'WINDOWS_SIGN_BACKEND' $backend
 
 # --- MSIX: signed, Publisher stays the Partner Center one ---------------------------
-if (Test-Path -LiteralPath $MsixConfig) {
+if ($backend -ne 'None' -and (Test-Path -LiteralPath $MsixConfig)) {
     $msixPublisher = ([regex]::Match((Get-Content -LiteralPath $MsixConfig -Raw), '(?m)^publisher:\s*"?([^"\r\n]+)"?')).Groups[1].Value.Trim()
     if ($msixPublisher -ne $publisher) {
         throw "MSIX publisher '$msixPublisher' (Partner Center identity) differs from the signing certificate Subject '$publisher'. The Microsoft Store rejects a package whose signature does not match its Publisher; sign with a certificate whose Subject is exactly '$msixPublisher'."
@@ -145,7 +146,7 @@ else {
 }
 
 # --- Inno Setup Sign Tool (ISCC reads HKCU\Software\Jordan Russell\Inno Setup\SignTools) ---
-if (-not $SkipInnoSignTool) {
+if (-not $SkipInnoSignTool -and $backend -ne 'None') {
     $pwsh = (Get-Command pwsh -ErrorAction SilentlyContinue).Source
     if (-not $pwsh) { $pwsh = (Get-Command powershell).Source }
     $script = (Resolve-Path -LiteralPath $SignScript).Path

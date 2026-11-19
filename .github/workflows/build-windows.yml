@@ -94,7 +94,7 @@ jobs:
         run: make windows-validate
 
       - name: Sign the Release tree
-        if: inputs.release
+        if: inputs.release && env.WINDOWS_SIGN_BACKEND != 'None'
         env: *signing-env
         run: |
           & .\windows\scripts\sign_windows_artifacts.ps1 -Path build\windows\x64\runner\Release
@@ -108,15 +108,16 @@ jobs:
         env: *signing-env
         run: make windows-exe-release
 
+      # Nordix: unsigned MSIX is uninstallable - skipped (Setup.exe + portable zip are shipped).
       - name: Package the MSIX
-        if: inputs.release
+        if: false
         env: *signing-env
         run: make windows-msix-release
 
       # Signs Setup.exe / MSIX and the PE files inside the portable zip. Skips files that already
       # verify as signed (MSVC runtimes; pre-signed Release PE).
       - name: Sign the packages
-        if: inputs.release
+        if: inputs.release && env.WINDOWS_SIGN_BACKEND != 'None'
         env: *signing-env
         run: |
           & .\windows\scripts\sign_windows_artifacts.ps1 -Path dist
@@ -128,9 +129,9 @@ jobs:
           Get-ChildItem -Path dist -Recurse | Select-Object FullName
           New-Item -ItemType Directory -Path out -Force | Out-Null
           $names = [ordered]@{
-            exe  = 'Hiddify-Windows-Setup-x64.exe'
-            msix = 'Hiddify-Windows-Setup-x64.Msix'
-            zip  = 'Hiddify-Windows-Portable-x64.zip'
+            exe  = 'Nordix-Windows-Setup-x64.exe'
+            msix = 'Nordix-Windows-Setup-x64.Msix'
+            zip  = 'Nordix-Windows-Portable-x64.zip'
           }
           foreach ($ext in $names.Keys) {
             $name = $names[$ext]

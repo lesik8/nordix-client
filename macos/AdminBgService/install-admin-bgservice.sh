@@ -4,20 +4,20 @@ set -euo pipefail
 # Installs the VPN service of builds without a Developer ID: the app's own executable, run as
 # `Hiddify --tunnel run` by launchd with administrator rights, which runs the full core. Hiddify runs
 # this with an administrator password; by hand:
-#   sudo "/Applications/Hiddify.app/Contents/Resources/TunnelService/install-tunnel-service.sh" \
-#     /Applications/Hiddify.app "$USER"
+#   sudo "/Applications/Nordix.app/Contents/Resources/TunnelService/install-tunnel-service.sh" \
+#     /Applications/Nordix.app "$USER"
 
 task_source="${1:-}"
 task_owner="${2:-${SUDO_USER:-}}"
 # Copied app + data live under AdminBgService (matches Go controlDataDir / serviceDataDirectory).
-task_destination="/Library/Application Support/Hiddify/AdminBgService/Hiddify.app"
+task_destination="/Library/Application Support/Nordix/AdminBgService/Nordix.app"
 
 if [[ "$(id -u)" != 0 ]]; then
   echo 'error: run this script with sudo.' >&2
   exit 1
 fi
 if [[ ! -x "$task_source/Contents/MacOS/Hiddify" ]]; then
-  echo 'error: pass the path of Hiddify.app.' >&2
+  echo 'error: pass the path of Nordix.app.' >&2
   exit 1
 fi
 
@@ -25,16 +25,16 @@ fi
 launchctl bootout system/com.hiddify.tunnel-helper 2>/dev/null || true
 rm -f /Library/LaunchDaemons/com.hiddify.tunnel-helper.plist /Library/PrivilegedHelperTools/com.hiddify.tunnel-helper \
   /var/run/hiddify-tunnel-helper.sock
-rm -rf "/Library/Application Support/Hiddify/TunnelHelper"
+rm -rf "/Library/Application Support/Nordix/TunnelHelper"
 
-task_legacy="/Library/Application Support/Hiddify/TunnelService/Hiddify.app"
+task_legacy="/Library/Application Support/Nordix/TunnelService/Nordix.app"
 for task_existing in "$task_destination" "$task_legacy"; do
   if [[ -x "$task_existing/Contents/MacOS/Hiddify" ]]; then
     "$task_existing/Contents/MacOS/Hiddify" --tunnel uninstall || true
   fi
 done
 # A root daemon must not run files its user can change, so it runs a root-owned copy of the app.
-rm -rf "$task_destination" "/Library/Application Support/Hiddify/TunnelService"
+rm -rf "$task_destination" "/Library/Application Support/Nordix/TunnelService"
 mkdir -p "$(dirname "$task_destination")"
 ditto "$task_source" "$task_destination"
 xattr -cr "$task_destination"

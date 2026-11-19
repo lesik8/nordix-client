@@ -1,9 +1,9 @@
 app_id: 6L903538-42B1-4596-G479-BJ779F21A65D
-publisher_name: Hiddify
-publisher_url: https://github.com/hiddify/hiddify-app
-display_name: Hiddify
+publisher_name: Nordix
+publisher_url: https://github.com/lesik8/nordix-client
+display_name: Nordix
 create_desktop_icon: true
-install_dir_name: "{autopf64}\\Hiddify"
+install_dir_name: "{autopf64}\\Nordix"
 setup_icon_file: windows\runner\resources\app_icon.ico
 # The first locale is the setup's language when Windows' UI language matches none.
 locales:

@@ -31,7 +31,7 @@ void main() {
     );
     expect(
       telegramReportLink(os: 'win', ov: '11', v: '50901', pm: 'msix', t: 'c').toString(),
-      'https://t.me/hiddify_issues_bot?start=b3M9d2luO292PTExO3Y9NTA5MDE7cG09bXNpeDt0PWM',
+      'https://t.me/lesik_vpn_bot?start=b3M9d2luO292PTExO3Y9NTA5MDE7cG09bXNpeDt0PWM',
     );
   });
 

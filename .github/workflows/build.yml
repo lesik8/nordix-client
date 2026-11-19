@@ -151,6 +151,8 @@ jobs:
     with: *build-inputs
 
   ios:
+    # Nordix: no Apple Developer account - the iOS build is disabled.
+    if: false
     needs: codegen
     uses: ./.github/workflows/build-ios.yml
     secrets: inherit
@@ -166,7 +168,7 @@ jobs:
   # answered 403 "Resource not accessible by integration" on the v5.2.0 run.
   release:
     if: inputs.upload-artifact && inputs.tag-name != 'draft'
-    needs: [codegen, test, android, linux, windows, macos, ios]
+    needs: [codegen, test, android, linux, windows, macos]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -186,7 +188,7 @@ jobs:
     if: >-
       !cancelled() && inputs.upload-artifact && needs.test.result == 'success' &&
       (needs.release.result == 'success' || needs.release.result == 'skipped')
-    needs: [test, android, linux, windows, macos, ios, release]
+    needs: [test, android, linux, windows, macos, release]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     permissions:
@@ -225,7 +227,7 @@ jobs:
   # Like the releases, it waits for every build, also those it does not upload.
   testflight:
     if: inputs.upload-artifact
-    needs: [codegen, test, android, linux, windows, macos, ios]
+    needs: [codegen, test, android, linux, windows, macos]
     uses: ./.github/workflows/testflight.yml
     secrets: inherit
     permissions:
@@ -240,7 +242,7 @@ jobs:
   # is an older one - of an earlier Flutter version or pubspec.lock - and is removed. Not after
   # a failed or skipped job: its caches were not touched either.
   prune-caches:
-    needs: [codegen, test, android, linux, windows, macos, ios]
+    needs: [codegen, test, android, linux, windows, macos]
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:

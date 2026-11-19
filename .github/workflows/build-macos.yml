@@ -38,17 +38,20 @@ jobs:
     continue-on-error: true
     permissions:
       contents: read
+    env:
+      HAS_APPLE_CERTS: ${{ secrets.APPLE_CERTIFICATE_P12 != '' }}
     strategy:
       fail-fast: false
       matrix:
         # `platform` is the Makefile prefix and the artifact name. The App Store build needs the
         # signing certificates, so it is built for a release only.
-        platform: ${{ fromJSON(inputs.release && '["macos", "macos-appstore"]' || '["macos"]') }}
+        platform: ['macos']  # Nordix: no Apple certs - no App Store build
     steps:
       - uses: actions/checkout@v6
 
       - uses: ./.github/actions/apple-signing
-        if: inputs.release
+        # Nordix: sign only when the certificate secrets are actually set.
+        if: inputs.release && env.HAS_APPLE_CERTS == 'true'
         with:
           p12-base64: ${{ secrets.APPLE_CERTIFICATE_P12 }}
           p12-password: ${{ secrets.APPLE_CERTIFICATE_P12_PASSWORD }}

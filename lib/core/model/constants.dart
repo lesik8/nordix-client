@@ -6,7 +6,8 @@ abstract class Constants {
   static const appName = "Nordix";
 
   /// Default subscription URL, seeded on first run when no profiles exist.
-  static const defaultSubscriptionUrl = "http://177.3.213.69:8443/nordix-sub-Kf82mZqX7wPj.txt";
+  /// Empty = disabled (personal build: profiles are added manually via vless links / QR).
+  static const defaultSubscriptionUrl = "";
   static const githubUrl = "https://github.com/lesik8/vpn-infra";
   static const licenseUrl = "https://github.com/lesik8/vpn-infra?tab=License-1-ov-file#readme";
   static const githubReleasesApiUrl = "https://api.github.com/repos/lesik8/nordix-client/releases";

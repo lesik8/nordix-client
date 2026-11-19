@@ -111,7 +111,7 @@ jobs:
       - name: Check the app icon
         if: inputs.release
         run: |
-          app=build/macos/Build/Products/Release/Hiddify.app
+          app=build/macos/Build/Products/Release/Nordix.app
           xcodebuild -version
           for f in Assets.car AppIcon.icns; do
             [[ -s "$app/Contents/Resources/$f" ]] || { echo "::error::$app has no Contents/Resources/$f (app icon)"; exit 1; }
@@ -124,8 +124,8 @@ jobs:
         run: |
           ls -R dist
           mkdir out
-          mv dist/*/*.dmg out/Hiddify-MacOS.dmg
-          mv dist/*/*.pkg out/Hiddify-MacOS-Installer.pkg
+          mv dist/*/*.dmg out/Nordix-MacOS.dmg
+          mv dist/*/*.pkg out/Nordix-MacOS-Installer.pkg
 
       # The names must match testflight.yml.
       - name: Collect the App Store packages
@@ -139,7 +139,7 @@ jobs:
               echo "::error::macos-appstore $ext not found under dist/"
               exit 1
             fi
-            cp "$file" "out/Hiddify-MacOS-AppStore.$ext"
+            cp "$file" "out/Nordix-MacOS-AppStore.$ext"
           done
           ls -la out
 
@@ -150,7 +150,7 @@ jobs:
           APPLE_NOTARIZATION_APPLE_ID: ${{ secrets.APPLE_NOTARIZATION_APPLE_ID }}
           APPLE_NOTARIZATION_TEAM_ID: ${{ secrets.APPLE_NOTARIZATION_TEAM_ID }}
           APPLE_NOTARIZATION_PASSWORD: ${{ secrets.APPLE_NOTARIZATION_PASSWORD }}
-        run: bash macos/scripts/notarize-release.sh out/Hiddify-MacOS.dmg out/Hiddify-MacOS-Installer.pkg
+        run: bash macos/scripts/notarize-release.sh out/Nordix-MacOS.dmg out/Nordix-MacOS-Installer.pkg
 
       - name: Upload the artifact
         if: inputs.release

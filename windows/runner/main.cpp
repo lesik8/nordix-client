@@ -53,19 +53,19 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   // find a copy that another of those entries already started. Showing that copy's window, as a
   // second launch by hand does, would undo a silent start, so this one just leaves.
   if (wcsstr(command_line, L"--autostart") != nullptr &&
-      ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", L"Hiddify") != nullptr)
+      ::FindWindow(L"FLUTTER_RUNNER_WIN32_WINDOW", L"Nordix") != nullptr)
   {
     return EXIT_SUCCESS;
   }
 
   // Replace "example" with the generated title found as parameter of `window.Create` in this file.
   // You may ignore the result if you need to create another window.
-  if (SendAppLinkToInstance(L"Hiddify"))
+  if (SendAppLinkToInstance(L"Nordix"))
   {
     return EXIT_SUCCESS;
   }
 
-  HANDLE hMutexInstance = CreateMutex(NULL, TRUE, L"HiddifyMutex");
+  HANDLE hMutexInstance = CreateMutex(NULL, TRUE, L"NordixMutex");
   HWND handle = FindWindowA(NULL, "Hiddify");
 
   if (GetLastError() == ERROR_ALREADY_EXISTS)
@@ -78,7 +78,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
     std::vector<std::string> command_line_arguments = GetCommandLineArguments();
     project.set_dart_entrypoint_arguments(std::move(command_line_arguments));
     FlutterWindow window(project);
-    if (window.SendAppLinkToInstance(L"Hiddify"))
+    if (window.SendAppLinkToInstance(L"Nordix"))
     {
       return false;
     }
@@ -114,7 +114,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE instance, _In_opt_ HINSTANCE prev,
   FlutterWindow window(project);
   Win32Window::Point origin(10, 10);
   Win32Window::Size size(1280, 720);
-  if (!window.Create(L"Hiddify", origin, size))
+  if (!window.Create(L"Nordix", origin, size))
   {
     return EXIT_FAILURE;
   }

@@ -3,6 +3,7 @@ import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:hiddify/core/db/db.dart';
+import 'package:hiddify/core/model/constants.dart';
 
 import 'package:hiddify/core/utils/exception_handler.dart';
 import 'package:hiddify/features/profile/data/profile_data_mapper.dart';
@@ -78,6 +79,19 @@ class ProfileRepositoryImpl with ExceptionHandler, InfraLogger implements Profil
         if (!await _profilePathResolver.directory.exists()) {
           await _profilePathResolver.directory.create(recursive: true);
         }
+      }
+
+      // Nordix: seed the built-in subscription on first run (no profiles yet).
+      // A failed seed (offline device, unreachable host) is logged and ignored —
+      // the user can still add profiles manually.
+      try {
+        final count = await _profileDataSource.watchProfilesCount().first;
+        if (count == 0 && Constants.defaultSubscriptionUrl.isNotEmpty) {
+          loggy.info("seeding default subscription");
+          await upsertRemote(Constants.defaultSubscriptionUrl, activate: true).run();
+        }
+      } catch (e) {
+        loggy.warning("default subscription seed failed: $e");
       }
 
       return right(unit);
